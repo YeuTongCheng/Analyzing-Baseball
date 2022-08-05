@@ -156,4 +156,69 @@ def lookup_player_names(info, top_ids_and_stats):
         play_names.append("{:.3f}".format(element[1])+" --- "\
                           +table[index][info['firstname']]+" "+table[index][info['lastname']])
     return play_names
+def compute_top_stats_year(info, formula, numplayers, year):
+    """
+    Inputs:
+      info        - Baseball data information dictionary
+      formula     - function that takes an info dictionary and a
+                    batting statistics dictionary as input and
+                    computes a compound statistic
+      numplayers  - Number of top players to return
+      year        - Year to filter by
+    Outputs:
+      Returns a list of strings for the top numplayers in the given year
+      according to the given formula.
+    """
+    statistics_table=read_csv_as_list_dict(info['battingfile'], info['separator'], info['quote'])
+    filter_table=filter_by_year(statistics_table, year, info['yearid'])
+    top_list=top_player_ids(info, filter_table, formula, numplayers)
+    result=lookup_player_names(info, top_list)
+    return result
+
+
+##
+## Part 2: Functions to compute top batting statistics by career
+##
+
+def aggregate_by_player_id(statistics, playerid, fields):
+    """
+    Inputs:
+      statistics - List of batting statistics dictionaries
+      playerid   - Player ID field name
+      fields     - List of fields to aggregate
+    Output:
+      Returns a nested dictionary whose keys are player IDs and whose values
+      are dictionaries of aggregated stats.  Only the fields from the fields
+      input will be aggregated in the aggregated stats dictionaries.
+    """
+    agg_dict={}
+    for element in statistics:
+        bat_dict={}
+        bat_dict[playerid]=element[playerid]
+        for field in fields:
+            if element[playerid] in agg_dict:
+                bat_dict[field]=int(element[field])+int(agg_dict[element[playerid]][field])
+            else:
+                bat_dict[field]=int(element[field])
+        agg_dict[element[playerid]]=bat_dict
+    return agg_dict
+
+
+
+def compute_top_stats_career(info, formula, numplayers):
+    """
+    Inputs:
+      info        - Baseball data information dictionary
+      formula     - function that takes an info dictionary and a
+                    batting statistics dictionary as input and
+                    computes a compound statistic
+      numplayers  - Number of top players to return
+    """
+    statistics_table=read_csv_as_list_dict(info['battingfile'], info['separator'], info['quote'])
+    filter_table=list(aggregate_by_player_id(statistics_table,\
+                                             info['playerid'], info['battingfields']).values())
+    top_list=top_player_ids(info, filter_table, formula, numplayers)
+    result=lookup_player_names(info, top_list)
+    return result
+
 
