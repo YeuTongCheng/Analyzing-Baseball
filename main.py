@@ -40,9 +40,6 @@ def read_csv_as_nested_dict(filename, keyfield, separator, quote):
             table[rowid] = row
     return table
 
-##
-## Provided formulas for common batting statistics
-##
 
 # Typical cutoff used for official statistics
 MINIMUM_AB = 500
@@ -75,6 +72,7 @@ def onbase_percentage(info, batting_stats):
         return (hits + walks) / (at_bats + walks)
     else:
         return 0
+    
 def slugging_percentage(info, batting_stats):
     """
     Inputs:
