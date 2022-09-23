@@ -10,7 +10,9 @@ Data Resource: https://www.seanlahman.com/baseball-archive/statistics
 
 Baseball statistical functions
 Batting average: https://en.wikipedia.org/wiki/Batting_average#Major_League_Baseball
+
 On-base percentage: https://en.wikipedia.org/wiki/On-base_percentage
+
 Slugging percentage:https://en.wikipedia.org/wiki/Slugging_percentage
 
 
